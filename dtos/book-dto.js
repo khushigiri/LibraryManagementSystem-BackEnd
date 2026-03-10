@@ -1,3 +1,4 @@
+
 class IssuedBook {
   _id;
   name;
@@ -8,7 +9,6 @@ class IssuedBook {
   issuedDate;
   returnDate;
 
-  // Whenever we create obj, the constructor gets invoked = Parametersised Constructor
   constructor(user) {
     this._id = user.issuedBook._id;
     this.name = user.issuedBook.name;

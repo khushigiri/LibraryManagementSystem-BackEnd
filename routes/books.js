@@ -4,9 +4,8 @@ const {
   getSingleBookById,
   getAllIssuedBooks,
   addNewBook,
-  updateBookbyid,
+  updateBookById,
 } = require("../controllers/book-controller");
-
 const { books } = require("../data/books.json");
 const { users } = require("../data/users.json");
 
@@ -33,6 +32,7 @@ router.get("/:id", getSingleBookById);
  */
 
 router.get("/", getAllBooks);
+
 
 /**
  * Route: /books/issued
@@ -64,6 +64,6 @@ router.post("/", addNewBook);
  * Data : id, name, genre, price, publisher, author
  */
 
-router.put("/updateBook/:id", updateBookbyid);
+router.put("/updateBook/:id", updateBookById);
 
 module.exports = router;

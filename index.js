@@ -1,6 +1,4 @@
-// to build servers using express.js
 const express = require("express");
-// for .env(environment) file
 const dotenv = require("dotenv");
 
 const DbConnection = require("./DatabaseConnection.js");
@@ -19,8 +17,7 @@ const PORT = 8081;
 app.use(express.json());
 
 // http://localhost:8081/users/
-
-app.get("/", (req, res) => {
+http: app.get("/", (req, res) => {
   res.status(200).json({
     message: "Server is up and running :-)",
     data: "hey",

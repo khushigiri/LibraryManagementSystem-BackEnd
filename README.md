@@ -1,66 +1,71 @@
-Server >> Storing certain book data >> User Register >> Subscriber
+# Library Management System (Backend)
 
-This is a book record management API Server/ Backend for the library system or management of records or manuals or books.
+A professional-grade Node.js and Express API designed for library inventory management. This system handles book tracking, user memberships, and features a dynamic fine-calculation engine based on subscription tiers.
 
-Fine System:
-User: 27/07/2024 - 27/10/2024
-28/07/2024 => Rs 50 per day if delayed the return of book.
+---
 
-# subscription types
+## Tech Stack
 
-3 months (Basic)
-6 months (Standard)
-12 months (Premium)
+* Runtime: Node.js
+* Framework: Express.js
+* Database: MongoDB
+* Object Modeling: Mongoose ODM
+* Environment Management: Dotenv
 
-If the subscription type is standard and if the subscription date is 27/07/2024
-Then subscription is valid till 27/10/2024
+---
 
-Within subscription date >> if we miss renewal >> Fine Rs 50
-per day
-subsccription date has been missed the renewal >> Fine Rs 100
-subsccription date has also been missed the renewal >> Fine Rs 100 + (50 per day).
+## Architecture & Design Patterns
 
-## Routes and EndPoints
+* MVC Pattern: Organized into dedicated folders for Models, Controllers, and Routes to ensure a clean separation of concerns.
 
-### /users
+* DTO (Data Transfer Object): Implements a `IssuedBook` DTO to flatten and transform complex database relationships into clean, frontend-friendly responses.
 
-POST: Creating a new user.
-GET: Gets all the user info here.
+* Centralized Model Exports: Uses `models/index.js` to streamline imports across the application.
 
-### /users/{id}
+* Event-Driven DB Connection: Monitors MongoDB connection health using Mongoose event listeners (`on` and `once`).
 
-GET: Get a user by id.
-PUT: Update a user by id.
-DELETE: Delete a user by id (Check if he/she still has an issued book and is there any fine to be paid).
+---
 
-### /user/subscription-details/{id}
+## Key Features
 
-GET: Get user subscription details >> Date of Subscription >> Valid till >> Is there any fine
+### 1. Inventory Control
 
-### /books
+Full CRUD functionality for books, including tracking of titles, authors, genres, and publishers with automatic `createdAt` and `updatedAt` timestamps.
 
-GET: Get all the books
-POST: Add a new book
+### 2. Subscription Management
 
-### /books/{id}
+Tracks user memberships with three distinct tiers:
 
-GET: Get a book by id
-PUT: Update a book by id
+* Basic: 90-day validity.
+* Standard: 180-day validity.
+* Premium: 365-day validity.
 
-### /books/issued
+### 3. Automated Fine Engine
 
-GET: Get all issued books
+Dynamically calculates fines based on subscription status and book return dates:
 
-### /books/issued/withFine
+* Expired Subscription + Late Book: 100 units.
+* Active Subscription + Late Book: 50 units.
 
-GET: Get all issued books with fine.
+---
 
-## npm init
+## API Reference
 
-## npm i nodemon --save-dev
+### User Endpoints
 
-## npm i express
+- GET: `/users` -> List all library members
+- GET:  `/users/:id` -> Get specific user profile by ID
+- POST: `/users` -> Register a new member
+- PUT: `/users/:id` -> Update user information
+- DELETE: `/users/:id` -> Remove a member
+- GET: `/users/subscription-details/:id` -> Calculate fines & expiration status
 
-## npm i mongoose
+### Book Endpoints
 
-## npm run dev
+- GET: `/books` -> Retrieve all books
+- GET: `/books/:id` -> Get book details by ID
+- GET: `/books/issued/by-user` -> Get all books currently issued
+- POST: `/books` -> Add a new book to the library
+- PUT: `/books/updateBook/:id` -> Update book details by ID
+
+---
