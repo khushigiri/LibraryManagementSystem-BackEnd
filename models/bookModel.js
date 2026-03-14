@@ -7,22 +7,27 @@ const bookSchema = new Schema(
     name: {
       type: String,
       required: true,
+      trim: true,
+      index: true,
     },
     author: {
       type: String,
       required: true,
+      trim: true,
     },
     price: {
-      type: String,
+      type: Number,
       required: true,
     },
     genre: {
       type: String,
       required: true,
+      trim: true,
     },
     publisher: {
       type: String,
       required: true,
+      trim: true,
     },
   },
   {
@@ -30,4 +35,6 @@ const bookSchema = new Schema(
   }
 );
 
-module.exports = mongoose.model("Book", bookSchema);
+const BookModel = mongoose.model("Book", bookSchema);
+
+module.exports = BookModel;

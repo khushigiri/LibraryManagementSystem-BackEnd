@@ -7,30 +7,33 @@ const userSchema = new Schema(
     name: {
       type: String,
       required: true,
+      trim: true,
     },
     surname: {
       type: String,
       required: true,
+      trim: true,
     },
     email: {
       type: String,
       required: true,
+      unique: true,
+      trim: true,
     },
     issuedBook: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Book",
-      required: false,
     },
     returnDate: {
-      type: "String",
-      required: false,
+      type: Date,
     },
     subscriptionType: {
-      type: "String",
+      type: String,
       required: true,
+      enum: ["Basic", "Standard", "Premium"],
     },
     subscriptionDate: {
-      type: "String",
+      type: Date,
       required: true,
     },
   },
@@ -39,4 +42,6 @@ const userSchema = new Schema(
   }
 );
 
-module.exports = mongoose.model("User", userSchema);
+const UserModel = mongoose.model("User", userSchema);
+
+module.exports = UserModel;

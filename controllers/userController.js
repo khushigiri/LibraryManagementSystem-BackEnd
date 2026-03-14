@@ -5,21 +5,14 @@ exports.getAllUsers = async (req, res) => {
   try {
     const users = await UserModel.find();
 
-    if (users.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "No Users Found In The DB",
-      });
-    }
-
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: "These are the user info: ",
       data: users,
     });
+
   } catch (error) {
     console.error(error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Server Error",
     });
@@ -61,7 +54,13 @@ exports.getSingleUserById = async (req, res) => {
 };
 
 exports.createNewUser = async (req, res) => {
-  const { name, surname, email, subscriptionType, subscriptionDate } = req.body;
+  
+  if (!name || !email) {
+  return res.status(400).json({
+    success: false,
+    message: "Name and email are required",
+  });
+}
 
   try {
     const newUser = await UserModel.create({
@@ -88,7 +87,7 @@ exports.createNewUser = async (req, res) => {
 
 exports.updateUserData = async (req, res) => {
   const { id } = req.params;
-  const { data } = req.body;
+  const updateData = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({
@@ -138,12 +137,12 @@ exports.deleteUser = async (req, res) => {
   try {
     const user = await UserModel.deleteOne({ _id: id });
 
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User Doesn't Exist !!",
-      });
-    }
+    if (user.deletedCount === 0) {
+  return res.status(404).json({
+    success: false,
+    message: "User Doesn't Exist",
+  });
+}
 
     return res.status(200).json({
       success: true,
@@ -188,24 +187,23 @@ exports.getSubscriptionDetailsById = async (req, res) => {
       return Math.floor(date / (1000 * 60 * 60 * 24));
     };
 
-    const subscriptionType = (date) => {
-      if (user.subscriptionType === "Basic") {
-        date += 90;
-      } else if (user.subscriptionType === "Standard") {
-        date += 180;
-      } else if (user.subscriptionType === "Premium") {
-        date += 365;
-      }
-      return date;
-    };
+    const calculateSubscriptionExpiration = (date) => {
+  const durations = {
+    Basic: 90,
+    Standard: 180,
+    Premium: 365,
+  };
+
+  return date + (durations[user.subscriptionType] || 0);
+};
 
     const returnDate = getDateInDays(user.returnDate);
     const currentDate = getDateInDays();
     const subscriptionDate = getDateInDays(user.subscriptionDate);
-    const subscriptionExpiration = subscriptionType(subscriptionDate);
+    const subscriptionExpiration = calculateSubscriptionExpiration(subscriptionDate);
 
     const data = {
-      ...user,
+      ...user.toObject(),
       isSubscriptionExpired: subscriptionExpiration < currentDate,
       daysLeftForExpiration:
         subscriptionExpiration <= currentDate
