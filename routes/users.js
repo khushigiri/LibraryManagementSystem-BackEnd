@@ -7,8 +7,9 @@ const {
   updateUserData,
   createNewUser,
   getSubscriptionDetailsById,
-} = require("../controllers/user-controller");
-
+  borrowBook,
+  returnBook
+} = require("../controllers/userController");
 const router = express.Router();
 
 /*  Get all users */
@@ -29,4 +30,11 @@ router.put("/:id", updateUserData);
 /*  Delete user */
 router.delete("/:id", deleteUser);
 
+/* Borrow a Book */
+router.post("/:userId/borrow/:bookId", borrowBook);
+
+/* Return a Book */
+router.post("/:userId/return", returnBook);
+
 module.exports = router;
+

@@ -54,7 +54,8 @@ exports.getSingleUserById = async (req, res) => {
 };
 
 exports.createNewUser = async (req, res) => {
-  
+  const { name, surname, email, subscriptionType, subscriptionDate } = req.body;
+
   if (!name || !email) {
   return res.status(400).json({
     success: false,
@@ -227,6 +228,94 @@ exports.getSubscriptionDetailsById = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Server Error",
+    });
+  }
+};
+
+exports.borrowBook = async (req, res) => {
+  const { userId, bookId } = req.params;
+
+  try {
+    const user = await UserModel.findById(userId);
+    const book = await BookModel.findById(bookId);
+
+    if (!user || !book) {
+      return res.status(404).json({
+        success: false,
+        message: "User or Book not found",
+      });
+    }
+
+    if (user.issuedBook) {
+      return res.status(400).json({
+        success: false,
+        message: "User already has a book issued",
+      });
+    }
+
+    const today = new Date();
+    const returnDate = new Date();
+    returnDate.setDate(today.getDate() + 14);
+
+    user.issuedBook = bookId;
+    user.issuedDate = today;
+    user.returnDate = returnDate;
+
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Book borrowed successfully",
+      data: user,
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
+
+exports.returnBook = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await UserModel.findById(userId);
+
+    if (!user || !user.issuedBook) {
+      return res.status(404).json({
+        success: false,
+        message: "No book issued",
+      });
+    }
+
+    const today = new Date();
+    const returnDate = new Date(user.returnDate);
+
+    let fine = 0;
+
+    if (today > returnDate) {
+      const diff = Math.ceil((today - returnDate) / (1000 * 60 * 60 * 24));
+      fine = diff * 10;
+    }
+
+    user.issuedBook = null;
+    user.returnDate = null;
+
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Book returned successfully",
+      fine,
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
     });
   }
 };

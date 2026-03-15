@@ -6,7 +6,8 @@ const {
   getAllIssuedBooks,
   addNewBook,
   updateBookById,
-} = require("../controllers/book-controller");
+  deleteBookById
+} = require("../controllers/bookController");
 
 const router = express.Router();
 

@@ -1,7 +1,7 @@
-
 class IssuedBook {
   _id;
   name;
+  author;
   genre;
   price;
   publisher;
@@ -10,12 +10,18 @@ class IssuedBook {
   returnDate;
 
   constructor(user) {
-    this._id = user.issuedBook._id;
-    this.name = user.issuedBook.name;
-    this.genre = user.issuedBook.genre;
-    this.price = user.issuedBook.price;
-    this.publisher = user.issuedBook.publisher;
-    this.issuedBy = user.issuedBy;
+    const book = user.issuedBook;
+
+    if (!book) return;
+
+    this._id = book._id;
+    this.name = book.name;
+    this.author = book.author;
+    this.genre = book.genre;
+    this.price = book.price;
+    this.publisher = book.publisher;
+
+    this.issuedBy = `${user.name} ${user.surname}`;
     this.issuedDate = user.issuedDate;
     this.returnDate = user.returnDate;
   }
