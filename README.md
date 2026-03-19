@@ -1,19 +1,34 @@
 # Library Management System (Backend)
 
-The **Library Management System Backend** is a RESTful API built using **Node.js, Express.js, and MongoDB** to manage library operations such as book inventory, user memberships, book issuance tracking, and fine calculation.
+A scalable **RESTful API** built using **Node.js, Express.js, and MongoDB** to manage library operations like book inventory, user memberships, book issuance tracking, and automated fine calculation.
 
-The system follows **clean backend architecture principles**, including the **MVC pattern**, **DTO transformation**, and **MongoDB relational modeling using Mongoose**. It demonstrates how scalable backend APIs can be built for real-world applications.
+**Live API:**
+https://librarymanagementsystem-backend-2nrk.onrender.com
+
+---
+
+## Features
+
+* Book Inventory Management (CRUD)
+* User Membership System with Subscription Plans
+* Book Issuance Tracking
+* Automated Fine Calculation Engine
+* Scalable Backend Architecture (MVC + DTO)
+* Deployed on Render with MongoDB Atlas
 
 ---
 
 ## Tech Stack
 
-* **Runtime:** Node.js
-* **Framework:** Express.js
-* **Database:** MongoDB
-* **Object Modeling:** Mongoose ODM
-* **Environment Management:** Dotenv
-* **API Testing:** Postman
+| Category           | Technology    |
+| ------------------ | ------------- |
+| Runtime            | Node.js       |
+| Framework          | Express.js    |
+| Database           | MongoDB Atlas |
+| ODM                | Mongoose      |
+| Environment Config | Dotenv        |
+| API Testing        | Postman       |
+| Deployment         | Render        |
 
 ---
 
@@ -21,131 +36,142 @@ The system follows **clean backend architecture principles**, including the **MV
 
 ### MVC Architecture
 
-The application follows the **Model-View-Controller pattern**:
+The application follows a clean **Model-View-Controller (MVC)** structure:
 
-* **Models:** Define MongoDB schema using Mongoose.
-* **Controllers:** Handle business logic and database operations.
-* **Routes:** Define REST API endpoints and connect them to controllers.
-
-This ensures a **clean separation of concerns**.
+* **Models:** Define MongoDB schemas using Mongoose
+* **Controllers:** Handle business logic and database operations
+* **Routes:** Define API endpoints and map them to controllers
 
 ---
 
 ### DTO (Data Transfer Object)
 
-A **DTO layer** is used to transform complex database relationships into clean responses.
+DTOs are used to transform complex relational data into clean API responses.
 
-Example: `IssuedBook DTO`
+**Example: IssuedBook DTO**
 
-This flattens data from:
+* Combines data from:
 
-* User
-* Book
-* Issue information
-
-into a **frontend-friendly response format**.
-
----
-
-### Event-Driven Database Connection
-
-MongoDB connection health is monitored using **Mongoose event listeners**.
-
-* `connection.on("error")`
-* `connection.once("open")`
-
-This helps track connection issues and server status.
+  * User
+  * Book
+  * Issue details
+* Returns a **frontend-friendly structured response**
 
 ---
 
-## Key Features
+### Event-Driven DB Connection
+
+MongoDB connection health is monitored using:
+
+connection.on("error")
+connection.once("open")
+
+---
+
+## Key Functionalities
 
 ### 1. Book Inventory Management
 
-Full CRUD functionality for books.
+* Add, update, and fetch books
+* Fields include:
 
-Each book stores:
+  * Title
+  * Author
+  * Genre
+  * Publisher
+  * Price
+* Automatic timestamps:
 
-* Title
-* Author
-* Genre
-* Publisher
-* Price
-
-Automatic timestamps track:
-
-* `createdAt`
-* `updatedAt`
+  * `createdAt`
+  * `updatedAt`
 
 ---
 
 ### 2. User Membership System
 
-Users can register and maintain subscriptions.
+Supports multiple subscription tiers:
 
-Supported subscription tiers:
-
-* **Basic** → 90 days
-* **Standard** → 180 days
-* **Premium** → 365 days
+| Plan     | Duration |
+| -------- | -------- |
+| Basic    | 90 days  |
+| Standard | 180 days |
+| Premium  | 365 days |
 
 ---
 
 ### 3. Issued Book Tracking
 
-The system tracks which books are issued to which users using MongoDB relationships:
-
-issuedBook: ObjectId → Book
-
-Mongoose `populate()` is used to fetch book details when required.
+* Tracks issued books using MongoDB relationships
+* Uses `Mongoose.populate()` to fetch related data
 
 ---
 
-### 4. Automated Fine Calculation Engine
+### 4. Fine Calculation Engine
 
-The system dynamically calculates fines based on:
+Dynamic fine calculation based on:
 
 * Subscription status
 * Return date
-* Current date
 
-Rules:
+**Rules:**
 
-* **Expired subscription + late book** → 100 units fine
-* **Active subscription + late book** → 50 units fine
-
----
-
-## API Reference
-
-### User Endpoints
-
-GET: `/users` -> List all users                         
-GET: `/users/:id` -> Get user details           
-POST: `/users` -> Register a new user                    
-PUT: `/users/:id` -> Update user information                
-DELETE: `/users/:id` -> Delete a user  
-GET: `/users/subscription-details/:id` -> Calculate subscription status and fine
+* Expired + Late → **100 units fine**
+* Active + Late → **50 units fine**
 
 ---
 
-### Book Endpoints
+## API Endpoints
 
-GET: `/books` -> Get all books           
-GET: `/books/:id` -> Get book by ID          
-GET: `/books/issued/by-user` -> Get all issued books    
-POST: `/books` -> Add new book            
-PUT: `/books/:id` -> Update book information 
+### User Routes
+
+| Method | Endpoint                        |
+| ------ | ------------------------------- |
+| GET    | /users                          |
+| GET    | /users/:id                      |
+| POST   | /users                          |
+| PUT    | /users/:id                      |
+| DELETE | /users/:id                      |
+| GET    | /users/subscription-details/:id |
+
+---
+
+### Book Routes
+
+| Method | Endpoint              |
+| ------ | --------------------- |
+| GET    | /books                |
+| GET    | /books/:id            |
+| GET    | /books/issued/by-user |
+| POST   | /books                |
+| PUT    | /books/:id            |
 
 ---
 
 ## API Testing
 
-All APIs were tested using **Postman** to validate:
+All endpoints were tested using **Postman**:
 
-* Request handling
+* Request validation
 * Database operations
-* Error responses
-* Business logic
+* Error handling
+* Business logic verification
+
+---
+
+## Deployment
+
+* Backend deployed on **Render**
+* Database hosted on **MongoDB Atlas**
+* Environment variables managed using **Dotenv**
+
+---
+
+## What I Learned
+
+* Designing scalable REST APIs
+* Implementing MVC architecture in real projects
+* Handling MongoDB relationships using Mongoose
+* Solving real-world deployment issues (IP whitelisting, env config)
+* Working with production-ready backend systems
 
 ---
